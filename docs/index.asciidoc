@@ -1,0 +1,5 @@
+= Logcatbeat Docs
+
+Welcome to the Logcatbeat documentation.
+
+
