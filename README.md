@@ -1,6 +1,6 @@
 # Logcatbeat
 
-Welcome to Logcatbeat.
+Welcome to Logcatbeat. It can get logs from Android devices or emulator and send them out.
 
 Ensure that this folder is at the following location:
 `${GOPATH}/src/github.com/Fize/logcatbeat`
@@ -48,6 +48,7 @@ To run Logcatbeat with debugging output enabled, run:
 ./logcatbeat -c logcatbeat.yml -e -d "*"
 ```
 
+[For security purposes the libbeat framework by default drops the ability to fork/exec. So if you are developing your own Beat that needs to do those things you should programmatically register 1 your own less restrictive policy or you can disable the protections from your config by setting seccomp.enabled: false (or on the CLI with -E seccomp.enabled=false).](https://discuss.elastic.co/t/unable-to-run-commands-using-exec-command-from-beat-linux/167360)
 
 ### Test
 

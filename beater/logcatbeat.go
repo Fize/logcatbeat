@@ -41,26 +41,47 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 	if err != nil {
 		return err
 	}
+	var command string
+	t := getRegisterTime()
 
+	var osPreCommand string
+	if bt.config.OS == "android" {
+		osPreCommand = "logcat"
+	} else {
+		osPreCommand = "adb logcat"
+	}
+
+	if t == "" {
+		command = osPreCommand
+	} else {
+		command = fmt.Sprintf("%s -T '%s'", osPreCommand, t)
+	}
 	ticker := time.NewTicker(bt.config.Period)
-	counter := 1
+	msgs := make(chan string, 256)
+	logcat := NewExecutor(command)
+	go logcat.Run(msgs)
+	go func() {
+		for m := range msgs {
+			event := beat.Event{
+				Timestamp: time.Now(),
+				Fields: common.MapStr{
+					"type":    "android-log",
+					"message": m,
+				},
+			}
+			bt.client.Publish(event)
+			err := setRegisterTime(m)
+			if err != nil {
+				logp.Err(err.Error())
+			}
+		}
+	}()
 	for {
 		select {
 		case <-bt.done:
 			return nil
 		case <-ticker.C:
 		}
-
-		event := beat.Event{
-			Timestamp: time.Now(),
-			Fields: common.MapStr{
-				"type":    b.Info.Name,
-				"counter": counter,
-			},
-		}
-		bt.client.Publish(event)
-		logp.Info("Event sent")
-		counter++
 	}
 }
 

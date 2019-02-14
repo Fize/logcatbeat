@@ -5,6 +5,7 @@
 logcatbeat:
   # Defines how often an event is sent to the output
   period: 1s
+  os: linux
 
 #================================ General =====================================
 
@@ -69,14 +70,21 @@ setup.kibana:
 # Configure what output to use when sending the data collected by the beat.
 
 #-------------------------- Elasticsearch output ------------------------------
-output.elasticsearch:
+# output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["localhost:9200"]
+  # hosts: ["localhost:9200"]
 
   # Optional protocol and basic auth credentials.
   #protocol: "https"
   #username: "elastic"
   #password: "changeme"
+
+output.redis:
+  hosts: ["10.0.4.166"]
+  password: "123123"
+  key: "filebeat"
+  db: 0
+  timeout: 5
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:
