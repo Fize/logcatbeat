@@ -5,7 +5,7 @@
 logcatbeat:
   # Defines how often an event is sent to the output
   period: 1s
-  os: linux
+  os: android
 
 #================================ General =====================================
 
@@ -80,11 +80,9 @@ setup.kibana:
   #password: "changeme"
 
 output.redis:
-  hosts: ["10.0.4.166"]
+  hosts: ["172.21.12.250"]
   password: "123123"
   key: "filebeat"
-  db: 0
-  timeout: 5
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:

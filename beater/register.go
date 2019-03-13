@@ -8,7 +8,7 @@ import (
 	"github.com/elastic/beats/libbeat/logp"
 )
 
-const registerFile = "/data/register"
+const registerFile = "/data/local/tmp/register"
 
 var logTime = regexp.MustCompile(`\s*([0-9]*)-([0-9]*)\s*([0-9]*):([0-9]*):([0-9]*)\.([0-9]{3})`)
 
