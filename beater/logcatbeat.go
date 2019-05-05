@@ -46,9 +46,9 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 
 	var osPreCommand string
 	if bt.config.OS == "android" {
-		osPreCommand = "logcat"
+		osPreCommand = "logcat python:S"
 	} else {
-		osPreCommand = "adb logcat"
+		osPreCommand = "adb logcat python:S"
 	}
 
 	if t == "" {
