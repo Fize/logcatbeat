@@ -3,14 +3,12 @@
 
 package config
 
-import "time"
-
 type Config struct {
-	Period time.Duration `config:"period"`
-	OS     string        `config:"os"` // linux, android
+	Option string `config:"option"`
+	OS     string `config:"os"` // linux, android
 }
 
 var DefaultConfig = Config{
-	Period: 1 * time.Second,
+	Option: "",
 	OS:     "linux",
 }

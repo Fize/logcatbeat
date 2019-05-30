@@ -46,17 +46,17 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 
 	var osPreCommand string
 	if bt.config.OS == "android" {
-		osPreCommand = "logcat python:S"
+		osPreCommand = fmt.Sprintf("logcat %s", bt.config.Option)
 	} else {
-		osPreCommand = "adb logcat python:S"
+		osPreCommand = fmt.Sprintf("adb logcat %s", bt.config.Option)
 	}
+	logp.Info(osPreCommand)
 
 	if t == "" {
 		command = osPreCommand
 	} else {
 		command = fmt.Sprintf("%s -T '%s'", osPreCommand, t)
 	}
-	ticker := time.NewTicker(bt.config.Period)
 	msgs := make(chan string, 256)
 	logcat := NewExecutor(command)
 	go logcat.Run(msgs)
@@ -80,7 +80,6 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 		select {
 		case <-bt.done:
 			return nil
-		case <-ticker.C:
 		}
 	}
 }
