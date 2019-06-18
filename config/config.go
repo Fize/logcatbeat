@@ -4,11 +4,13 @@
 package config
 
 type Config struct {
-	Option string `config:"option"`
-	OS     string `config:"os"` // linux, android
+	Option string   `config:"option"`
+	OS     string   `config:"os"` // linux, android
+	Tags   []string `config:"tags"`
 }
 
 var DefaultConfig = Config{
 	Option: "",
 	OS:     "linux",
+	Tags:   []string{},
 }

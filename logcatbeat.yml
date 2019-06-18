@@ -3,9 +3,9 @@
 ############################# Logcatbeat ######################################
 
 logcatbeat:
-  # Defines how often an event is sent to the output
   option: "python:S"
   os: android
+  tags: ["android-log"]
 
 #================================ General =====================================
 

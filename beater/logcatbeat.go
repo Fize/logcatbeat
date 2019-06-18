@@ -2,6 +2,7 @@ package beater
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/elastic/beats/libbeat/beat"
@@ -44,6 +45,7 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 	var command string
 	t := getRegisterTime()
 
+	// analysis os system and logcat option
 	var osPreCommand string
 	if bt.config.OS == "android" {
 		osPreCommand = fmt.Sprintf("logcat %s", bt.config.Option)
@@ -51,6 +53,16 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 		osPreCommand = fmt.Sprintf("adb logcat %s", bt.config.Option)
 	}
 	logp.Info(osPreCommand)
+
+	// tags
+	tags := bt.config.Tags
+	if len(tags) == 0 {
+		hostname, err := os.Hostname()
+		if err != nil {
+			logp.Error(err)
+		}
+		tags = append(tags, hostname)
+	}
 
 	if t == "" {
 		command = osPreCommand
@@ -67,6 +79,7 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 				Fields: common.MapStr{
 					"type":    "android-log",
 					"message": m,
+					"tag":     tags,
 				},
 			}
 			bt.client.Publish(event)
