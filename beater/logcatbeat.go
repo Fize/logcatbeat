@@ -71,15 +71,27 @@ func (bt *Logcatbeat) Run(b *beat.Beat) error {
 	}
 	msgs := make(chan string, 256)
 	logcat := NewExecutor(command)
+
+	podName := os.Getenv("NENLY_POD_NAME")
+	if podName == "" {
+		podName, _ = os.Hostname()
+	}
+	podNS := os.Getenv("NENLY_POD_NS")
+	if podNS == "" {
+		podNS = "default"
+	}
+
 	go logcat.Run(msgs)
 	go func() {
 		for m := range msgs {
 			event := beat.Event{
 				Timestamp: time.Now(),
 				Fields: common.MapStr{
-					"type":    "android-log",
-					"message": m,
-					"tag":     tags,
+					"type":          "android-log",
+					"message":       m,
+					"tag":           tags,
+					"pod_name":      podName,
+					"pod_namespace": podNS,
 				},
 			}
 			bt.client.Publish(event)
